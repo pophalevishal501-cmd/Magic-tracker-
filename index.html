@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Sales Tracker</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 15px; background-color: #f4f6f9; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1, h2, h3 { text-align: center; color: #2c3e50; }
+        .entry-section { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto 20px auto; display: flex; flex-direction: column; gap: 15px; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        label { font-weight: bold; color: #4a5568; }
+        input { padding: 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 16px; }
+        button.btn-enter { background: #3182ce; color: white; border: none; padding: 12px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        button.btn-enter:hover { background: #2b6cb0; }
+        .live-section { background: #edf2f7; padding: 15px; border-radius: 10px; margin-bottom: 25px; border-left: 5px solid #4c51bf; }
+        .toggle-container { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #cbd5e0; }
+        .toggle-btn { background: #718096; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+        .toggle-btn.on { background: #48bb78; }
+        .live-grid { display: flex; flex-wrap: wrap; gap: 10px; min-height: 40px; align-items: center; }
+        .live-tag { background: white; padding: 6px 12px; border-radius: 20px; font-weight: bold; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
+        .dashboard-title { margin-top: 40px; border-bottom: 2px solid #cbd5e0; padding-bottom: 10px; }
+        .grid-10 { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-bottom: 30px; }
+        .grid-7 { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 30px; }
+        .col-card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 10px; display: flex; flex-direction: column; border-top: 4px solid #3182ce; }
+        .col-card.three-digit { border-top-color: #ed8936; }
+        .col-header { font-weight: bold; text-align: center; background: #ebf8ff; padding: 5px; border-radius: 4px; margin-bottom: 10px; font-size: 14px; }
+        .col-card.three-digit .col-header { background: #feebc8; }
+        .items-list { flex-grow: 1; font-size: 13px; max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+        .item-row { display: flex; justify-content: space-between; padding: 2px 4px; border-bottom: 1px solid #f7fafc; }
+        .col-total, .col-profit { margin-top: 8px; padding-top: 5px; border-top: 1px dashed #cbd5e0; font-size: 13px; font-weight: bold; display: flex; justify-content: space-between; }
+        .col-profit { color: #2f855a; border-top: none; padding-top: 0; }
+        .reset-container { text-align: center; margin: 30px 0; }
+        .btn-reset { background: #e53e3e; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .master-page { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 12px; margin-bottom: 30px; font-size: 14px; }
+        .master-row { margin: 0; padding: 3px 0; border-bottom: 1px solid #f1f5f9; white-space: nowrap; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>ðŸ“Š à¤¦à¥ˆà¤¨à¤¿à¤• à¤µà¤¿à¤•à¥à¤°à¥€ à¤†à¤£à¤¿ à¤¨à¤«à¤¾ à¤Ÿà¥à¤°à¥…à¤•à¤°</h1>
+
+    <div class="entry-section">
+        <h3>ðŸ“¥ à¤¨à¤µà¥€à¤¨ à¤µà¤¿à¤•à¥à¤°à¥€ à¤¨à¥‹à¤‚à¤¦</h3>
+        <div class="form-group">
+            <label for="prodCode">à¤µà¤¸à¥à¤¤à¥‚à¤šà¤¾ à¤•à¥‹à¤¡ (Product Code):</label>
+            <input type="text" id="prodCode" placeholder="à¤‰à¤¦à¤¾. 1, 01, 128" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="prodAmt">à¤µà¤¸à¥à¤¤à¥‚à¤šà¥€ à¤°à¤•à¥à¤•à¤® (Amount):</label>
+            <input type="number" id="prodAmt" placeholder="à¤°à¤•à¥à¤•à¤® à¤Ÿà¤¾à¤•à¤¾" autocomplete="off">
+        </div>
+        <button class="btn-enter" onclick="addSalesEntry()">à¤‡à¤‚à¤Ÿà¤° (Enter)</button>
+    </div>
+
+    <div class="live-section">
+        <div class="toggle-container">
+            <span style="font-weight: bold; font-size: 16px;">ðŸ”„ à¤²à¤¾à¤ˆà¤µà¥à¤¹ à¤…à¤ªà¤¡à¥‡à¤Ÿ (100 à¤®à¤§à¥‚à¤¨ à¤µà¤œà¤¾, à¤ªà¥à¤°à¤¤à¥à¤¯à¥‡à¤• à¤à¤‚à¤Ÿà¥à¤°à¥€ à¤¸à¥à¤µà¤¤à¤‚à¤¤à¥à¤°):</span>
+            <button id="toggleBtn" class="toggle-btn" onclick="toggleLiveMode()">LIVE MODE: OFF</button>
+        </div>
+        <div id="liveGrid" class="live-grid">
+            <span style="color: #a0aec0; font-style: italic;">à¤…à¤œà¥‚à¤¨ à¤•à¥‹à¤£à¤¤à¥€à¤¹à¥€ à¤à¤‚à¤Ÿà¥à¤°à¥€ à¤•à¥‡à¤²à¥‡à¤²à¥€ à¤¨à¤¾à¤¹à¥€...</span>
+        </div>
+    </div>
+
+    <h2 class="dashboard-title">ðŸ“ à¥§ à¤µ à¥¨ à¤…à¤‚à¤•à¥€ à¤•à¥‹à¤¡ à¤¡à¥…à¤¶à¤¬à¥‹à¤°à¥à¤¡ (0 à¤¤à¥‡ 99)</h2>
+    <div id="dashboard12" class="grid-10"></div>
+
+    <h2 class="dashboard-title">ðŸ“ à¥© à¤…à¤‚à¤•à¥€ à¤•à¥‹à¤¡ à¤¡à¥…à¤¶à¤¬à¥‹à¤°à¥à¤¡ (à¥¨à¥¨à¥¦ à¤µà¤¸à¥à¤¤à¥‚ - à¥­ à¤•à¥‰à¤²à¤®: à¥©à¥¦+à¥©à¥¦+à¥©à¥¦+à¥©à¥¦+à¥©à¥¦+à¥©à¥¦+à¥ªà¥¦)</h2>
+    <div id="dashboard3" class="grid-7"></div>
+
+    <h2 class="dashboard-title">ðŸ“‹ à¤¤à¥€à¤¨ à¤…à¤‚à¤•à¥€ à¤®à¤¾à¤¸à¥à¤Ÿà¤° à¤ªà¥‡à¤œ</h2>
+    <div id="master3" class="master-page"></div>
+    <h2 class="dashboard-title">ðŸ’° à¤¦à¥‹à¤¨ à¤…à¤‚à¤•à¥€ à¤•à¥‰à¤²à¤®à¤šà¤¾ à¤¨à¤«à¤¾</h2>
+    <div id="profit12Master" class="master-page"></div>
+
+    
+    <div class="reset-container">
+        <button class="btn-reset" onclick="clearAllData()">ðŸ—‘ï¸ à¤¸à¤°à¥à¤µ à¤¡à¥‡à¤Ÿà¤¾ à¤•à¥à¤²à¤¿à¤¯à¤° à¤•à¤°à¤¾ (Reset)</button>
+    </div>
+</div>
+
+<script>
+    const fixedThreeDigitCodes = [
+        "128","137","146","236","245","290","380","470","489","560",
+        "678","579","100","119","155","227","335","344","399","588","669","777",
+        "129","138","147","156","237","246","345","390","480","570",
+        "679","589","200","110","228","255","336","499","660","688","778","444",
+        "120","139","148","157","238","247","256","346","490","580",
+        "670","689","300","166","229","337","355","445","599","779","788","111",
+        "130","149","158","167","239","248","257","347","356","590",
+        "680","789","400","112","220","266","338","446","455","699","770","888",
+        "140","159","168","230","249","258","267","348","357","456",
+        "690","780","500","113","122","177","339","366","447","799","889","555",
+        "123","150","169","178","240","259","268","349","358","457",
+        "367","790","600","114","277","330","448","466","556","880","899","222",
+        "124","160","179","250","269","278","340","359","368","458",
+        "467","890","700","115","133","188","223","377","449","557","566","999",
+        "125","134","170","189","260","279","350","369","378","459",
+        "567","468","800","116","224","233","288","440","477","558","990","666",
+        "126","135","180","234","270","289","360","379","450","469",
+        "117","478","568","900","144","199","225","388","559","577","667","333",
+        "127","136","145","190","235","280","370","389","460","479",
+        "569","578","550","118","226","244","299","334","488","668","677","000"
+    ];
+
+    let salesData = JSON.parse(localStorage.getItem('salesData')) || {};
+    let salesEntries = JSON.parse(localStorage.getItem('salesEntries')) || [];
+    let isLiveModeOn = false;
+
+    function getThreeDigitColumns() {
+        let columns = [];
+        for (let i = 0; i < 6; i++) {
+            columns.push(fixedThreeDigitCodes.slice(i * 30, (i + 1) * 30));
+        }
+        columns.push(fixedThreeDigitCodes.slice(180, 220));
+        return columns;
+    }
+
+    function addSalesEntry() {
+        let codeInput = document.getElementById('prodCode').value.trim();
+        const amtInput = parseFloat(document.getElementById('prodAmt').value);
+        if (!codeInput || isNaN(amtInput)) { alert('à¤•à¥ƒà¤ªà¤¯à¤¾ à¤µà¥ˆà¤§ à¤•à¥‹à¤¡ à¤†à¤£à¤¿ à¤°à¤•à¥à¤•à¤® à¤Ÿà¤¾à¤•à¤¾!'); return; }
+
+        if (!salesData[codeInput]) salesData[codeInput] = 0;
+        salesData[codeInput] += amtInput;
+        salesEntries.push({ code: codeInput, amount: amtInput });
+
+        localStorage.setItem('salesData', JSON.stringify(salesData));
+        localStorage.setItem('salesEntries', JSON.stringify(salesEntries));
+        document.getElementById('prodCode').value = '';
+        document.getElementById('prodAmt').value = '';
+        document.getElementById('prodCode').focus();
+        renderAll();
+    }
+
+    function toggleLiveMode() {
+        isLiveModeOn = !isLiveModeOn;
+        const btn = document.getElementById('toggleBtn');
+        if (isLiveModeOn) {
+            btn.textContent = "LIVE MODE: ON";
+            btn.classList.add('on');
+        } else {
+            btn.textContent = "LIVE MODE: OFF";
+            btn.classList.remove('on');
+        }
+        renderAll();
+    }
+
+    function calculateLiveValues() {
+        const result = [];
+        const groups = {};
+
+        salesEntries.forEach((entry, index) => {
+            if (!groups[entry.code]) groups[entry.code] = [];
+            groups[entry.code].push({ ...entry, index });
+        });
+
+        Object.values(groups).forEach(group => {
+            const code = group[0].code;
+            const isTwoDigit = code.length === 2;
+            const isThreeDigit = code.length === 3;
+            const isTriple = isThreeDigit &&
+                code[0] === code[1] && code[1] === code[2];
+            const isDouble = isThreeDigit && !isTriple &&
+                (code[0] === code[1] || code[1] === code[2]);
+
+            if (isThreeDigit) {
+                // 3-digit LIVE cap:
+                // triple = 10, double = 25, all other 3-digit = 50.
+                // Repeated entries of the same code share ONE common cap.
+                const cap = isTriple ? 10 : (isDouble ? 25 : 50);
+                const totalAmount = group.reduce((sum, e) => sum + Math.max(0, e.amount), 0);
+                const remaining = Math.max(0, cap - totalAmount);
+
+                // Allocate the remaining amount proportionally to each entry.
+                // Therefore the combined displayed amount can never exceed cap.
+                group.forEach(entry => {
+                    const share = totalAmount > 0
+                        ? remaining * (Math.max(0, entry.amount) / totalAmount)
+                        : remaining / group.length;
+                    result.push({
+                        ...entry,
+                        display: Math.max(0, Math.min(cap, share))
+                    });
+                });
+                return;
+            }
+
+            if (isTwoDigit) {
+                // 2-digit LIVE repeated entries share ONE 100 cap.
+                // The total of all displayed values for the same code can
+                // never exceed 100.
+                const totalAmount = group.reduce((sum, e) => sum + Math.max(0, e.amount), 0);
+                const remaining = Math.max(0, 100 - totalAmount);
+
+                group.forEach(entry => {
+                    const share = totalAmount > 0
+                        ? remaining * (Math.max(0, entry.amount) / totalAmount)
+                        : remaining / group.length;
+                    result.push({
+                        ...entry,
+                        display: Math.max(0, Math.min(100, share))
+                    });
+                });
+                return;
+            }
+
+            // One-digit LIVE rule remains 100 minus the entry amount.
+            group.forEach(entry => {
+                result.push({
+                    ...entry,
+                    display: Math.max(0, Math.min(100, 100 - entry.amount))
+                });
+            });
+        });
+
+        return result.sort((a, b) => a.index - b.index);
+    }
+
+    function renderLiveSection() {
+        const grid = document.getElementById('liveGrid');
+        grid.innerHTML = '';
+        if (salesEntries.length === 0) {
+            grid.innerHTML = '<span style="color:#a0aec0;font-style:italic;">à¤…à¤œà¥‚à¤¨ à¤•à¥‹à¤£à¤¤à¥€à¤¹à¥€ à¤à¤‚à¤Ÿà¥à¤°à¥€ à¤•à¥‡à¤²à¥‡à¤²à¥€ à¤¨à¤¾à¤¹à¥€...</span>';
+            renderTwoDigitProfitMaster();
+            return;
+        }
+        const entries = isLiveModeOn
+            ? calculateLiveValues()
+            : salesEntries.map((entry,index) => ({...entry,index,display:entry.amount}));
+
+        entries.forEach(entry => {
+            const tag = document.createElement('div');
+            tag.className = 'live-tag';
+            tag.textContent = `${entry.code} = â‚¹${Number(entry.display.toFixed(3))}`;
+            grid.appendChild(tag);
+        });
+
+    }
+
+    function renderAll() {
+        renderLiveSection();
+        
+        const dash12 = document.getElementById('dashboard12');
+        dash12.innerHTML = '';
+        
+        let colTotals12 = Array(10).fill(0);
+        let colData12 = Array.from({ length: 10 }, () => []);
+
+        Object.keys(salesData).forEach(code => {
+            if (code.length === 1 || code.length === 2) {
+                let firstDigit = parseInt(code.charAt(0));
+                if (firstDigit >= 0 && firstDigit <= 9) {
+                    colData12[firstDigit].push({ code: code, amount: salesData[code] });
+                    colTotals12[firstDigit] += salesData[code];
+                }
+            }
+        });
+
+        let maxTotal12 = Math.max(...colTotals12);
+
+        for (let i = 0; i < 10; i++) {
+            const card = document.createElement('div');
+            card.className = 'col-card';
+            
+            let html = `<div class="col-header">à¤•à¥‰à¤²à¤® ${i}</div>`;
+            html += `<div class="items-list">`;
+            colData12[i].forEach(item => {
+                html += `<div class="item-row"><span>Code ${item.code}</span><span>â‚¹${item.amount}</span></div>`;
+            });
+            html += `</div>`;
+            html += `<div class="col-total"><span>à¤à¤•à¥‚à¤£:</span><span>â‚¹${colTotals12[i]}</span></div>`;
+            
+            let netProfit = maxTotal12 - colTotals12[i];
+            html += `<div class="col-profit"><span>à¤¨à¤«à¤¾:</span><span>â‚¹${netProfit}</span></div>`;
+
+            
+            card.innerHTML = html;
+            dash12.appendChild(card);
+        }
+
+        renderTwoDigitProfitMaster(colTotals12, maxTotal12);
+
+        const dash3 = document.getElementById('dashboard3');
+        dash3.innerHTML = '';
+        const threeDigitCols = getThreeDigitColumns();
+
+        threeDigitCols.forEach((codeList, idx) => {
+            const card = document.createElement('div');
+            card.className = 'col-card three-digit';
+            
+            let html = `<div class="col-header">à¤•à¥‰à¤²à¤® ${idx + 1}</div>`;
+            html += `<div class="items-list">`;
+            
+            let colTotal = 0;
+            codeList.forEach(code => {
+                let salesAmt = salesData[code] !== undefined ? salesData[code] : 0;
+                const isTriple = code[0] === code[1] && code[1] === code[2];
+                const isDouble = !isTriple && (code[0] === code[1] || code[1] === code[2]);
+                let displayAmt;
+                if (isTriple) displayAmt = 10;
+                else if (salesAmt === 0) displayAmt = 50;
+                else if (isDouble) displayAmt = 25 - salesAmt;
+                else displayAmt = 50 - salesAmt;
+                displayAmt = Number(displayAmt.toFixed(2));
+                colTotal += displayAmt;
+                let isEntered = salesData[code] !== undefined;
+                html += `<div class="item-row" style="${isEntered ? 'font-weight:bold;color:#e65100;' : 'color:#718096;'}"><span>Code ${code}</span><span>â‚¹${displayAmt}</span></div>`;
+            });
+            
+            html += `</div>`;
+            html += `<div class="col-total" style="border-top: 1px dashed #ed8936;"><span>à¤à¤•à¥‚à¤£:</span><span>â‚¹${colTotal}</span></div>`;
+            
+            card.innerHTML = html;
+            dash3.appendChild(card);
+        });
+
+        renderMasterPage();
+    }
+
+    function renderMasterPage() {
+        const master = document.getElementById('master3');
+        master.innerHTML = '';
+        const grouped = {};
+        fixedThreeDigitCodes.forEach(code => {
+            const salesAmt = salesData[code] !== undefined ? salesData[code] : 0;
+            const isTriple = code[0] === code[1] && code[1] === code[2];
+            const isDouble = !isTriple && (code[0] === code[1] || code[1] === code[2]);
+            let displayAmt;
+            if (isTriple) displayAmt = 10;
+            else if (salesAmt === 0) displayAmt = 50;
+            else if (isDouble) displayAmt = 25 - salesAmt;
+            else displayAmt = 50 - salesAmt;
+            displayAmt = Number(displayAmt.toFixed(2));
+            const key = String(displayAmt);
+            if (!grouped[key]) grouped[key] = [];
+            grouped[key].push(code);
+        });
+        Object.keys(grouped).forEach(amount => {
+            const row = document.createElement('div');
+            row.className = 'master-row';
+            row.textContent = `${grouped[amount].join(',')}=â‚¹${amount}`;
+            master.appendChild(row);
+        });
+    }
+
+    function renderTwoDigitProfitMaster(colTotals12, maxTotal12) {
+        const box = document.getElementById('profit12Master');
+        if (!box) return;
+        box.innerHTML = '';
+
+        // IMPORTANT: use the exact profit values calculated for the
+        // two-digit columns; do not replace them with fixed 100..1000 values.
+        const profitValues = colTotals12.map(v => maxTotal12 - v);
+        const profitTotal = profitValues.reduce((sum, v) => sum + v, 0);
+
+        profitValues.forEach((value, i) => {
+            const row = document.createElement('div');
+            row.className = 'master-row';
+            row.textContent = `${i}=${Number(value.toFixed(3))}`;
+            box.appendChild(row);
+        });
+
+        const separator = document.createElement('div');
+        separator.className = 'master-row';
+        separator.textContent = '---------------';
+        box.appendChild(separator);
+
+        const total = document.createElement('div');
+        total.className = 'master-row';
+        total.style.fontWeight = 'bold';
+        total.textContent = `=${Number(profitTotal.toFixed(3))}`;
+        box.appendChild(total);
+
+        // LIVE UPDATE is copied separately only when LIVE MODE is ON.
+        if (isLiveModeOn) {
+            const liveTitle = document.createElement('div');
+            liveTitle.className = 'master-row';
+            liveTitle.style.fontWeight = 'bold';
+            liveTitle.style.marginTop = '10px';
+            liveTitle.textContent = 'LIVE UPDATE';
+            box.appendChild(liveTitle);
+
+            calculateLiveValues().forEach(entry => {
+                const row = document.createElement('div');
+                row.className = 'master-row';
+                row.textContent = `${entry.code}=${Number(entry.display.toFixed(3))}`;
+                box.appendChild(row);
+            });
+        }
+    }
+
+    function clearAllData
+() {
+        if (confirm('à¤¤à¥à¤®à¥à¤¹à¤¾à¤²à¤¾ à¤–à¤¾à¤¤à¥à¤°à¥€ à¤†à¤¹à¥‡ à¤•à¤¾ à¤•à¥€ à¤¸à¤°à¥à¤µ à¤¡à¥‡à¤Ÿà¤¾ à¤¡à¤¿à¤²à¥€à¤Ÿ à¤•à¤°à¤¾à¤¯à¤šà¤¾ à¤†à¤¹à¥‡?')) {
+            salesData = {};
+            salesEntries = [];
+            localStorage.removeItem('salesData');
+            localStorage.removeItem('salesEntries');
+            renderAll();
+        }
+    }
+
+    window.onload = renderAll;
+</script>
+</body>
+</html>
