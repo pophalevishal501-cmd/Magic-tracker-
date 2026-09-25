@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Sales Tracker</title>
+    <title>दैनंदिन विक्री ट्रॅकर</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 15px; background-color: #f4f6f9; color: #333; }
         .container { max-width: 1200px; margin: 0 auto; }
@@ -40,45 +40,45 @@
 <body>
 
 <div class="container">
-    <h1>ðŸ“Š à¤¦à¥ˆà¤¨à¤¿à¤• à¤µà¤¿à¤•à¥à¤°à¥€ à¤†à¤£à¤¿ à¤¨à¤«à¤¾ à¤Ÿà¥à¤°à¥…à¤•à¤°</h1>
+    <h1>📊 दैनिक विक्री आणि नफा ट्रॅकर</h1>
 
     <div class="entry-section">
-        <h3>ðŸ“¥ à¤¨à¤µà¥€à¤¨ à¤µà¤¿à¤•à¥à¤°à¥€ à¤¨à¥‹à¤‚à¤¦</h3>
+        <h3>📥 नवीन विक्री नोंद</h3>
         <div class="form-group">
-            <label for="prodCode">à¤µà¤¸à¥à¤¤à¥‚à¤šà¤¾ à¤•à¥‹à¤¡ (Product Code):</label>
-            <input type="text" id="prodCode" placeholder="à¤‰à¤¦à¤¾. 1, 01, 128" autocomplete="off">
+            <label for="prodCode">वस्तूचा कोड:</label>
+            <input type="text" id="prodCode" placeholder="उदा. 1, 01, 128" autocomplete="off">
         </div>
         <div class="form-group">
-            <label for="prodAmt">à¤µà¤¸à¥à¤¤à¥‚à¤šà¥€ à¤°à¤•à¥à¤•à¤® (Amount):</label>
-            <input type="number" id="prodAmt" placeholder="à¤°à¤•à¥à¤•à¤® à¤Ÿà¤¾à¤•à¤¾" autocomplete="off">
+            <label for="prodAmt">वस्तूची रक्कम:</label>
+            <input type="number" id="prodAmt" placeholder="रक्कम टाका" autocomplete="off">
         </div>
-        <button class="btn-enter" onclick="addSalesEntry()">à¤‡à¤‚à¤Ÿà¤° (Enter)</button>
+        <button class="btn-enter" onclick="addSalesEntry()">इंटर</button>
     </div>
 
     <div class="live-section">
         <div class="toggle-container">
-            <span style="font-weight: bold; font-size: 16px;">ðŸ”„ à¤²à¤¾à¤ˆà¤µà¥à¤¹ à¤…à¤ªà¤¡à¥‡à¤Ÿ (100 à¤®à¤§à¥‚à¤¨ à¤µà¤œà¤¾, à¤ªà¥à¤°à¤¤à¥à¤¯à¥‡à¤• à¤à¤‚à¤Ÿà¥à¤°à¥€ à¤¸à¥à¤µà¤¤à¤‚à¤¤à¥à¤°):</span>
-            <button id="toggleBtn" class="toggle-btn" onclick="toggleLiveMode()">LIVE MODE: OFF</button>
+            <span style="font-weight: bold; font-size: 16px;">🔄 लाईव्ह अपडेट (100 मधून वजा, प्रत्येक एंट्री स्वतंत्र):</span>
+            <button id="toggleBtn" class="toggle-btn" onclick="toggleLiveMode()">लाईव्ह मोड: बंद</button>
         </div>
         <div id="liveGrid" class="live-grid">
-            <span style="color: #a0aec0; font-style: italic;">à¤…à¤œà¥‚à¤¨ à¤•à¥‹à¤£à¤¤à¥€à¤¹à¥€ à¤à¤‚à¤Ÿà¥à¤°à¥€ à¤•à¥‡à¤²à¥‡à¤²à¥€ à¤¨à¤¾à¤¹à¥€...</span>
+            <span style="color: #a0aec0; font-style: italic;">अजून कोणतीही एंट्री केलेली नाही...</span>
         </div>
     </div>
 
-    <h2 class="dashboard-title">ðŸ“ à¥§ à¤µ à¥¨ à¤…à¤‚à¤•à¥€ à¤•à¥‹à¤¡ à¤¡à¥…à¤¶à¤¬à¥‹à¤°à¥à¤¡ (0 à¤¤à¥‡ 99)</h2>
+    <h2 class="dashboard-title">📁 १ व २ अंकी कोड डॅशबोर्ड (0 ते 99)</h2>
     <div id="dashboard12" class="grid-10"></div>
 
-    <h2 class="dashboard-title">ðŸ“ à¥© à¤…à¤‚à¤•à¥€ à¤•à¥‹à¤¡ à¤¡à¥…à¤¶à¤¬à¥‹à¤°à¥à¤¡ (à¥¨à¥¨à¥¦ à¤µà¤¸à¥à¤¤à¥‚ - à¥­ à¤•à¥‰à¤²à¤®: à¥©à¥¦+à¥©à¥¦+à¥©à¥¦+à¥©à¥¦+à¥©à¥¦+à¥©à¥¦+à¥ªà¥¦)</h2>
+    <h2 class="dashboard-title">📁 ३ अंकी कोड डॅशबोर्ड (२२० वस्तू - ७ कॉलम: ३०+३०+३०+३०+३०+३०+४०)</h2>
     <div id="dashboard3" class="grid-7"></div>
 
-    <h2 class="dashboard-title">ðŸ“‹ à¤¤à¥€à¤¨ à¤…à¤‚à¤•à¥€ à¤®à¤¾à¤¸à¥à¤Ÿà¤° à¤ªà¥‡à¤œ</h2>
+    <h2 class="dashboard-title">📋 तीन अंकी मास्टर पेज</h2>
     <div id="master3" class="master-page"></div>
-    <h2 class="dashboard-title">ðŸ’° à¤¦à¥‹à¤¨ à¤…à¤‚à¤•à¥€ à¤•à¥‰à¤²à¤®à¤šà¤¾ à¤¨à¤«à¤¾</h2>
+    <h2 class="dashboard-title">💰 दोन अंकी कॉलमचा नफा</h2>
     <div id="profit12Master" class="master-page"></div>
 
     
     <div class="reset-container">
-        <button class="btn-reset" onclick="clearAllData()">ðŸ—‘ï¸ à¤¸à¤°à¥à¤µ à¤¡à¥‡à¤Ÿà¤¾ à¤•à¥à¤²à¤¿à¤¯à¤° à¤•à¤°à¤¾ (Reset)</button>
+        <button class="btn-reset" onclick="clearAllData()">🗑️ सर्व डेटा रीसेट करा</button>
     </div>
 </div>
 
@@ -122,7 +122,7 @@
     function addSalesEntry() {
         let codeInput = document.getElementById('prodCode').value.trim();
         const amtInput = parseFloat(document.getElementById('prodAmt').value);
-        if (!codeInput || isNaN(amtInput)) { alert('à¤•à¥ƒà¤ªà¤¯à¤¾ à¤µà¥ˆà¤§ à¤•à¥‹à¤¡ à¤†à¤£à¤¿ à¤°à¤•à¥à¤•à¤® à¤Ÿà¤¾à¤•à¤¾!'); return; }
+        if (!codeInput || isNaN(amtInput)) { alert('कृपया वैध कोड आणि रक्कम टाका!'); return; }
 
         if (!salesData[codeInput]) salesData[codeInput] = 0;
         salesData[codeInput] += amtInput;
@@ -140,10 +140,10 @@
         isLiveModeOn = !isLiveModeOn;
         const btn = document.getElementById('toggleBtn');
         if (isLiveModeOn) {
-            btn.textContent = "LIVE MODE: ON";
+            btn.textContent = "लाईव्ह मोड: सुरू";
             btn.classList.add('on');
         } else {
-            btn.textContent = "LIVE MODE: OFF";
+            btn.textContent = "लाईव्ह मोड: बंद";
             btn.classList.remove('on');
         }
         renderAll();
@@ -224,7 +224,7 @@
         const grid = document.getElementById('liveGrid');
         grid.innerHTML = '';
         if (salesEntries.length === 0) {
-            grid.innerHTML = '<span style="color:#a0aec0;font-style:italic;">à¤…à¤œà¥‚à¤¨ à¤•à¥‹à¤£à¤¤à¥€à¤¹à¥€ à¤à¤‚à¤Ÿà¥à¤°à¥€ à¤•à¥‡à¤²à¥‡à¤²à¥€ à¤¨à¤¾à¤¹à¥€...</span>';
+            grid.innerHTML = '<span style="color:#a0aec0;font-style:italic;">अजून कोणतीही एंट्री केलेली नाही...</span>';
             renderTwoDigitProfitMaster();
             return;
         }
@@ -235,7 +235,7 @@
         entries.forEach(entry => {
             const tag = document.createElement('div');
             tag.className = 'live-tag';
-            tag.textContent = `${entry.code} = â‚¹${Number(entry.display.toFixed(3))}`;
+            tag.textContent = `${entry.code} = ₹${Number(entry.display.toFixed(3))}`;
             grid.appendChild(tag);
         });
 
@@ -266,16 +266,16 @@
             const card = document.createElement('div');
             card.className = 'col-card';
             
-            let html = `<div class="col-header">à¤•à¥‰à¤²à¤® ${i}</div>`;
+            let html = `<div class="col-header">कॉलम ${i}</div>`;
             html += `<div class="items-list">`;
             colData12[i].forEach(item => {
-                html += `<div class="item-row"><span>Code ${item.code}</span><span>â‚¹${item.amount}</span></div>`;
+                html += `<div class="item-row"><span>कोड ${item.code}</span><span>₹${item.amount}</span></div>`;
             });
             html += `</div>`;
-            html += `<div class="col-total"><span>à¤à¤•à¥‚à¤£:</span><span>â‚¹${colTotals12[i]}</span></div>`;
+            html += `<div class="col-total"><span>एकूण:</span><span>₹${colTotals12[i]}</span></div>`;
             
             let netProfit = maxTotal12 - colTotals12[i];
-            html += `<div class="col-profit"><span>à¤¨à¤«à¤¾:</span><span>â‚¹${netProfit}</span></div>`;
+            html += `<div class="col-profit"><span>नफा:</span><span>₹${netProfit}</span></div>`;
 
             
             card.innerHTML = html;
@@ -292,7 +292,7 @@
             const card = document.createElement('div');
             card.className = 'col-card three-digit';
             
-            let html = `<div class="col-header">à¤•à¥‰à¤²à¤® ${idx + 1}</div>`;
+            let html = `<div class="col-header">कॉलम ${idx + 1}</div>`;
             html += `<div class="items-list">`;
             
             let colTotal = 0;
@@ -308,11 +308,11 @@
                 displayAmt = Number(displayAmt.toFixed(2));
                 colTotal += displayAmt;
                 let isEntered = salesData[code] !== undefined;
-                html += `<div class="item-row" style="${isEntered ? 'font-weight:bold;color:#e65100;' : 'color:#718096;'}"><span>Code ${code}</span><span>â‚¹${displayAmt}</span></div>`;
+                html += `<div class="item-row" style="${isEntered ? 'font-weight:bold;color:#e65100;' : 'color:#718096;'}"><span>कोड ${code}</span><span>₹${displayAmt}</span></div>`;
             });
             
             html += `</div>`;
-            html += `<div class="col-total" style="border-top: 1px dashed #ed8936;"><span>à¤à¤•à¥‚à¤£:</span><span>â‚¹${colTotal}</span></div>`;
+            html += `<div class="col-total" style="border-top: 1px dashed #ed8936;"><span>एकूण:</span><span>₹${colTotal}</span></div>`;
             
             card.innerHTML = html;
             dash3.appendChild(card);
@@ -342,7 +342,7 @@
         Object.keys(grouped).forEach(amount => {
             const row = document.createElement('div');
             row.className = 'master-row';
-            row.textContent = `${grouped[amount].join(',')}=â‚¹${amount}`;
+            row.textContent = `${grouped[amount].join(',')}=₹${amount}`;
             master.appendChild(row);
         });
     }
@@ -375,13 +375,13 @@
         total.textContent = `=${Number(profitTotal.toFixed(3))}`;
         box.appendChild(total);
 
-        // LIVE UPDATE is copied separately only when LIVE MODE is ON.
+        // लाईव्ह अपडेट is copied separately only when लाईव्ह मोड सुरू आहे.
         if (isLiveModeOn) {
             const liveTitle = document.createElement('div');
             liveTitle.className = 'master-row';
             liveTitle.style.fontWeight = 'bold';
             liveTitle.style.marginTop = '10px';
-            liveTitle.textContent = 'LIVE UPDATE';
+            liveTitle.textContent = 'लाईव्ह अपडेट';
             box.appendChild(liveTitle);
 
             calculateLiveValues().forEach(entry => {
@@ -395,7 +395,7 @@
 
     function clearAllData
 () {
-        if (confirm('à¤¤à¥à¤®à¥à¤¹à¤¾à¤²à¤¾ à¤–à¤¾à¤¤à¥à¤°à¥€ à¤†à¤¹à¥‡ à¤•à¤¾ à¤•à¥€ à¤¸à¤°à¥à¤µ à¤¡à¥‡à¤Ÿà¤¾ à¤¡à¤¿à¤²à¥€à¤Ÿ à¤•à¤°à¤¾à¤¯à¤šà¤¾ à¤†à¤¹à¥‡?')) {
+        if (confirm('तुम्हाला खात्री आहे का की सर्व डेटा डिलीट करायचा आहे?')) {
             salesData = {};
             salesEntries = [];
             localStorage.removeItem('salesData');
